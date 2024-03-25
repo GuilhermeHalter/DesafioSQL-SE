@@ -118,6 +118,7 @@ TRUNCATE TABLE Produtos;
 
 _________________________________________________________________________________________________________
 
+Anotações:
 
 - Razão Social VARCHAR(255)
 - Nome Fantasia VARCHAR(255)
