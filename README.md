@@ -116,6 +116,29 @@ TRUNCATE TABLE Produtos;
 
 
 
+_________________________________________________________________________________________________________
+
+Anotações:
+
+- Razão Social VARCHAR(255)
+- Nome Fantasia VARCHAR(255)
+- CNPJ BIGINT(14), VARCHAR(18)
+- Data de Fundação DATE
+- Email VARCHAR(100)
+- Website VARCHAR(100)
+- Telefone BIGINT(14) (Já considera números de 9 dígitos). Na dúvida, use VARCHAR
+- Celular BIGINT(14) (Já considera números de 9 dígitos) Na dúvida, use VARCHAR
+- Responsável VARCHAR(255), VARCHAR(100)
+- Endereço VARCHAR(150)
+- Endereço, número VARCHAR(20) (lembre-se: "números" podem conter outros caracteres)
+- Bairro VARCHAR(50)
+- Cidade VARCHAR(50)
+- UF CHAR(2), TINYINT(2) (uso de números se relacionado a outra tabela)
+- CEP INT(8), VARCHAR(10)
+- Descrição TEXT
+
+
+
 
 
 
