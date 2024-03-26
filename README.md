@@ -32,13 +32,13 @@ As chaves podem ser Compostas, consistindo de dois ou mais atributos  combinados
 
 1. Criar Banco de Dados
 
-```bash
+```SQL
 CREATE DATABASE Supermecado;
 ```
 
 2. Criar Tabelas
 
-```bash
+```SQL
 CREATE TABLE Fornecedores (
   Cod_Fornec SMALLINT PRIMARY KEY,
   Nome_Fornec VARCHAR(50)
@@ -57,7 +57,7 @@ CREATE TABLE Produtos (
 
 3. Inserir dados nas tabelas
 
-```bash
+```SQL
 INSERT INTO Fornecedores (Cod_Fornec, Nome_Fornec)
 VALUES (1, "Acme");
 
@@ -69,33 +69,33 @@ VALUES (100,"Monitor LCD", 12, 550.00, 1),
 ```
 
 4. Efetuar consulta 
-```bash
+```SQL
 SELECT Nome_Fornec FROM Fornecedores; // trazendo colunas especificas
 SELECT Nome_Prod, Prece_Prod FROM Produtos; // trazendo colunas especificas
 SELECT * FROM Produtos; //trazendo todas as colunas 
 ```
 
 5. Consultando uma tabela com filtros de dados
-```bash
+```SQL
 SELECT Nome_Prod FROM Produtos
 WHERE ID_Prod = 101;
 ```
 
 6. Alterar um registro na tabela
-```bash
+```SQL
 UPDATE Produtos
 SET Preco_Prod = 630.00
 WHERE ID_Prod = 100  // A cláusula WHERE é muito importante se não você fará o update em todos os dados da tabela
 ```
 
 7. Excluir registros de uma tabela
-```bash
+```SQL
 DELETE FROM Produtos
 WHERE ID_Prod = 101; // A cláusula WHERE é muito importante se não você irá deletar todos os dados da tabela
 ```
 
 8. Trazer dados de duas ou mais tabelas relacionadas
-```bash
+```SQL
 SELECT Nome_Prod, Nome_Fornec
 FROM Fornecedores
 INNER JOIN Produtos
@@ -103,14 +103,14 @@ ON Fornecedores.Cod_Fornec = Produtos.Cod_Fornec;
 ```
 
 9. Retornar resultados ordenados em uma consulta
-```bash
+```SQL
 SELECT Nome_Prod, Preco_Prod
-FROM Produtos;
+FROM Produtos
 ORDER BY Nome_Prod;
 ```
 
 10. Apagar todos os dados de uma tabela
-```bash
+```SQL
 TRUNCATE TABLE Produtos;
 ```
 
