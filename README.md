@@ -40,21 +40,43 @@ FILEGROWTH=10%
 )
 ```
 
-**Comando USE** <br>
+### Comando USE <br>
 O comando USE instrui o SGBDR (Sistema Gerenciador de Banco de Dados Relacional) a utilizar o banco de dados especificado para rodar os comandos
 
 ```SQL
 USE db_Biblioteca
 ```
 
-**Comando sp_helpdb** <br>
+### Comando sp_helpdb <br>
 O comando sp_helpdb informa o tamanho, taxa de crescimento, e local do banco de dados.
 
 ```SQL
 sp_helpdb db_Biblioteca
 ```
 
+## Constraints (Restições)
 
+São regras aplicadas nas colunas de uma tabela, usadas para limitar os tipos de dados que são inseridos.
+Podem ser especificadas no momento de criação da tabela (CREATE) ou após a tabela ter sido criada (ALTER).
+
+### Principais Constraints
+- NOT NULL 
+- UNIQUE
+- PRIMARY KEY
+- FOREING KEY
+- CHECK
+- DEFAULT
+
+**NOT NULL** <br>
+A constraint NOT NULL impõe a uma coluna a NÃO aceitar valores NULL. A constraint NOT NULL obriga um campo a sempre possuir um valor.
+Deste modo, não é possivel inserir um registro (ou atualizar) sem entrar com um valor neste campo.
+
+**UNIQUE**<br>
+A restrição UNIQUE indentifica de forma única cada registro em uma tabela de um banco de dados. As constraints UNIQUE e PRIMARY KEY garantem a unicidade em uma coluna ou conjunto de colunas.
+
+
+```SQL
+```
 
 
 
