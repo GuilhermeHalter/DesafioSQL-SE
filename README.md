@@ -28,7 +28,38 @@ As chaves podem ser únicas ou não-unicas:
 - Não-única: Usada para agrupar instancias de classe em categorias.
 As chaves podem ser Compostas, consistindo de dois ou mais atributos  combinados.
 
-## Comando Essenciais
+## Criação de banco de dados
+```SQL
+CREATE DATABASE db_Biblioteca
+ON PRIMARY(
+NAME= db_biblioteca,
+FILENAME='C:\SQL\db_Biblioteca.MDF',
+SIZE=6MB,
+MAXSIZE=15MB,
+FILEGROWTH=10%
+)
+```
+
+**Comando USE** <br>
+O comando USE instrui o SGBDR (Sistema Gerenciador de Banco de Dados Relacional) a utilizar o banco de dados especificado para rodar os comandos
+
+```SQL
+USE db_Biblioteca
+```
+
+**Comando sp_helpdb** <br>
+O comando sp_helpdb informa o tamanho, taxa de crescimento, e local do banco de dados.
+
+```SQL
+sp_helpdb db_Biblioteca
+```
+
+
+
+
+
+
+## Resumo (Comando Essenciais)
 
 1. Criar Banco de Dados
 
