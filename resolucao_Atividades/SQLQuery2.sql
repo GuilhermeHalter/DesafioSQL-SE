@@ -1,23 +1,23 @@
 --LISTA 2 de Exercicios SQL
 USE treinamento
 
---FaÁa um comando para listar:
---A)O nome e telefone de todos os clientes em que o telefone comeÁa com o digito 4
+--Fa√ßa um comando para listar:
+--A)O nome e telefone de todos os clientes em que o telefone come√ßa com o digito 4
 SELECT NMCUSTOMER, IDFONE 
 FROM CUSTOMER
 WHERE IDFONE LIKE '4%';
 
---B)Todas as colunas dos clientes que n„o possuem telefone cadastrados.
+--B)Todas as colunas dos clientes que n√£o possuem telefone cadastrados.
 SELECT * 
 FROM CUSTOMER 
 WHERE IDFONE = NULL;
 
---C) O nome e o telefone dos fornecedores em que o DDD n„o foi cadastrado
+--C) O nome e o telefone dos fornecedores em que o DDD n√£o foi cadastrado
 SELECT NMSUPPLIER, IDFONE 
 FROM SUPPLIER
 WHERE LEN(IDFONE) < 11
 
---D) O nome, quantidade em estoque e o preÁo com desconto de 10% dos produtos que tem mais de 2000 unidades em estoque.
+--D) O nome, quantidade em estoque e o pre√ßo com desconto de 10% dos produtos que tem mais de 2000 unidades em estoque.
 SELECT NMPRODUCT, QTSTOCK, VLPRICE,
 CASE
 	WHEN QTSTOCK > 2000 THEN ( VLPRICE-(VLPRICE * 0.1) )
@@ -25,12 +25,38 @@ CASE
 END
 FROM PRODUCT;
 
---E)O nome e o preÁo dos produtos com preÁo entre 10 e 20 reais
+--E)O nome e o pre√ßo dos produtos com pre√ßo entre 10 e 20 reais
 SELECT NMPRODUCT, VLPRICE 
 FROM PRODUCT
 WHERE VLPRICE BETWEEN 10 AND 20;
 
-/*F) O nome do produto, o preÁo e o preÁo total do estoque dos produtos com preÁo acima de 50 reais*/ 
+--F) O nome do produto, o pre√ßo e o pre√ßo total do estoque dos produtos com pre√ßo acima de 50 reais 
+SELECT NMPRODUCT, VLPRICE, (VLPRICE * QTSTOCK) AS TOTAL_VALUE 
+FROM PRODUCT
+WHERE QTSTOCK > 50;
 
+/*G) O nome do produto, o nome do fornecedor e o telefone do fornecedor dos produtos 
+com pre√ßo acima de 20 reais e que tenham mais de 1500 unidades em estoque*/
+SELECT NMPRODUCT, NMSUPPLIER, IDFONE, VLPRICE, QTSTOCK
+FROM PRODUCT, SUPPLIER
+WHERE 
+	VLPRICE > 20
+	AND QTSTOCK > 1500;
 
-SELECT * FROM PRODUCT;
+--H) O nome do cliente, a data do pedido e o valor total do pedido para pedidos feito entre junho e julho de 2003
+SELECT NMCUSTOMER, DTREQUEST, VLTOTAL 
+FROM CUSTOMER, REQUEST
+WHERE DTREQUEST BETWEEN '2003-06-01' AND '2003-07-30';
+
+/*
+I) O nome do cliente, o nome do produto, data do pedido, a quantidade pedida,
+o valor unitario de venda do produto e o valor total do produto pedido, cujas unidades 
+pedidas por pedido seja maior que 500
+*/
+
+SELECT NMCUSTOMER, NMPRODUCT, DTREQUEST, QTAMOUNT, VLUNITARY, (QTAMOUNT * VLUNITARY) AS VLTOTALPRODRESQ 
+FROM CUSTOMER, REQUEST, PRODUCT,PRODUCTREQUEST
+WHERE CUSTOMER.CDCUSTOMER = REQUEST.CDCUSTOMER 
+    AND REQUEST.CDREQUEST = PRODUCTREQUEST.CDREQUEST 
+    AND PRODUCT.CDPRODUCT = PRODUCTREQUEST.CDPRODUCT 
+    AND PRODUCTREQUEST.QTAMOUNT > 500;
