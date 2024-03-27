@@ -28,7 +28,60 @@ As chaves podem ser únicas ou não-unicas:
 - Não-única: Usada para agrupar instancias de classe em categorias.
 As chaves podem ser Compostas, consistindo de dois ou mais atributos  combinados.
 
-## Comando Essenciais
+## Criação de banco de dados
+```SQL
+CREATE DATABASE db_Biblioteca
+ON PRIMARY(
+NAME= db_biblioteca,
+FILENAME='C:\SQL\db_Biblioteca.MDF',
+SIZE=6MB,
+MAXSIZE=15MB,
+FILEGROWTH=10%
+)
+```
+
+### Comando USE <br>
+O comando USE instrui o SGBDR (Sistema Gerenciador de Banco de Dados Relacional) a utilizar o banco de dados especificado para rodar os comandos
+
+```SQL
+USE db_Biblioteca
+```
+
+### Comando sp_helpdb <br>
+O comando sp_helpdb informa o tamanho, taxa de crescimento, e local do banco de dados.
+
+```SQL
+sp_helpdb db_Biblioteca
+```
+
+## Constraints (Restições)
+
+São regras aplicadas nas colunas de uma tabela, usadas para limitar os tipos de dados que são inseridos.
+Podem ser especificadas no momento de criação da tabela (CREATE) ou após a tabela ter sido criada (ALTER).
+
+### Principais Constraints
+- NOT NULL 
+- UNIQUE
+- PRIMARY KEY
+- FOREING KEY
+- CHECK
+- DEFAULT
+
+**NOT NULL** <br>
+A constraint NOT NULL impõe a uma coluna a NÃO aceitar valores NULL. A constraint NOT NULL obriga um campo a sempre possuir um valor.
+Deste modo, não é possivel inserir um registro (ou atualizar) sem entrar com um valor neste campo.
+
+**UNIQUE**<br>
+A restrição UNIQUE indentifica de forma única cada registro em uma tabela de um banco de dados. As constraints UNIQUE e PRIMARY KEY garantem a unicidade em uma coluna ou conjunto de colunas.
+
+
+```SQL
+```
+
+
+
+
+## Resumo (Comando Essenciais)
 
 1. Criar Banco de Dados
 
@@ -70,9 +123,9 @@ VALUES (100,"Monitor LCD", 12, 550.00, 1),
 
 4. Efetuar consulta 
 ```SQL
-SELECT Nome_Fornec FROM Fornecedores; // trazendo colunas especificas
-SELECT Nome_Prod, Prece_Prod FROM Produtos; // trazendo colunas especificas
-SELECT * FROM Produtos; //trazendo todas as colunas 
+SELECT Nome_Fornec FROM Fornecedores; --trazendo colunas especificas
+SELECT Nome_Prod, Prece_Prod FROM Produtos; --trazendo colunas especificas
+SELECT * FROM Produtos; --trazendo todas as colunas 
 ```
 
 5. Consultando uma tabela com filtros de dados
@@ -85,13 +138,13 @@ WHERE ID_Prod = 101;
 ```SQL
 UPDATE Produtos
 SET Preco_Prod = 630.00
-WHERE ID_Prod = 100  // A cláusula WHERE é muito importante se não você fará o update em todos os dados da tabela
+WHERE ID_Prod = 100  --A cláusula WHERE é muito importante se não você fará o update em todos os dados da tabela
 ```
 
 7. Excluir registros de uma tabela
 ```SQL
 DELETE FROM Produtos
-WHERE ID_Prod = 101; // A cláusula WHERE é muito importante se não você irá deletar todos os dados da tabela
+WHERE ID_Prod = 101;  --A cláusula WHERE é muito importante se não você irá deletar todos os dados da tabela
 ```
 
 8. Trazer dados de duas ou mais tabelas relacionadas
