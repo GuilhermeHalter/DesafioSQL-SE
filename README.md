@@ -123,9 +123,9 @@ VALUES (100,"Monitor LCD", 12, 550.00, 1),
 
 4. Efetuar consulta 
 ```SQL
-SELECT Nome_Fornec FROM Fornecedores; // trazendo colunas especificas
-SELECT Nome_Prod, Prece_Prod FROM Produtos; // trazendo colunas especificas
-SELECT * FROM Produtos; //trazendo todas as colunas 
+SELECT Nome_Fornec FROM Fornecedores; --trazendo colunas especificas
+SELECT Nome_Prod, Prece_Prod FROM Produtos; --trazendo colunas especificas
+SELECT * FROM Produtos; --trazendo todas as colunas 
 ```
 
 5. Consultando uma tabela com filtros de dados
@@ -138,13 +138,13 @@ WHERE ID_Prod = 101;
 ```SQL
 UPDATE Produtos
 SET Preco_Prod = 630.00
-WHERE ID_Prod = 100  // A cláusula WHERE é muito importante se não você fará o update em todos os dados da tabela
+WHERE ID_Prod = 100  --A cláusula WHERE é muito importante se não você fará o update em todos os dados da tabela
 ```
 
 7. Excluir registros de uma tabela
 ```SQL
 DELETE FROM Produtos
-WHERE ID_Prod = 101; // A cláusula WHERE é muito importante se não você irá deletar todos os dados da tabela
+WHERE ID_Prod = 101;  --A cláusula WHERE é muito importante se não você irá deletar todos os dados da tabela
 ```
 
 8. Trazer dados de duas ou mais tabelas relacionadas
