@@ -1,24 +1,65 @@
 --LISTA 4 de Exercicios SQL
 USE treinamento
 
---Faça um comando para listar:
-/*A) O nome de todos  que itens que ja foram pedidos (fazer uma versão com DISTINCT e uma com GROUP BY).*/
+--FaÃ§a um comando para listar:
+/*A) O nome de todos  que itens que ja foram pedidos (fazer uma versÃ£o com DISTINCT e uma com GROUP BY).*/
+SELECT DISTINCT CDPRODUCT FROM PRODUCTREQUEST
+
+SELECT CDPRODUCT FROM PRODUCTREQUEST
+GROUP BY CDPRODUCT
 
 /*B) O nome do produto, o numero de vezes que ele foi pedido e a quantidade total pedida;*/
+SELECT PRODUCT.NMPRODUCT, COUNT(PRODUCTREQUEST.CDPRODUCT) AS NUMPEDIDOS, QTAMOUNT * COUNT(PRODUCTREQUEST.CDPRODUCT) AS QTTOTAL
+FROM PRODUCT, PRODUCTREQUEST
+GROUP BY NMPRODUCT, PRODUCTREQUEST.CDPRODUCT, QTAMOUNT
 
 /*C) O nome do fornecedor, o total em estoque dos produtos fornecidos pelo fornecedor 
-a média de preço dos produtos fornecidos e quantos produtos ele fornece*/
+a mÃ©dia de preÃ§o dos produtos fornecidos e quantos produtos ele fornece*/
+SELECT NMSUPPLIER, SUM(QTSTOCK) AS TOTALSTOCK, AVG(VLPRICE) AS MEDIAPRICE, COUNT(PRODUCT.CDSUPPLIER) AS QTPRODUCT 
+FROM SUPPLIER JOIN PRODUCT ON SUPPLIER.CDSUPPLIER = PRODUCT.CDSUPPLIER
+GROUP BY NMSUPPLIER
 
 /*D) O nome do cliente, seu telefone, o valor da maior o valor da menor compra,
-o total comprado e a média de valor comprado ordenado por maior compra decrescente.*/
+o total comprado e a mÃ©dia de valor comprado ordenado por maior compra decrescente.*/
+SELECT NMCUSTOMER, IDFONE, MAX(REQUEST.VLTOTAL) AS VLMAX, MIN(REQUEST.VLTOTAL) AS VLMIN, AVG(VLTOTAL) AS VLMEDIA
+FROM PRODUCTREQUEST 
+JOIN REQUEST ON REQUEST.CDREQUEST = PRODUCTREQUEST.CDREQUEST
+JOIN CUSTOMER ON CUSTOMER.CDCUSTOMER = REQUEST.CDCUSTOMER
+GROUP BY NMCUSTOMER, IDFONE
+ORDER BY  MAX(REQUEST.VLTOTAL) DESC
 
-/*E) A data do pedido, o nome do cliente, quandos proditos distintos ele pediu,
+/*E) A data do pedido, o nome do cliente, quandos produtos distintos ele pediu,
 o valor total do pedido(baseado nos valores do tabela productrequest), 
-amédia de valores do pedido (baseado nos valores da tabela productrequest) */
+a mÃ©dia de valores do pedido (baseado nos valores da tabela productrequest) */
 
-/*F) O nome do fornecedor e quantos produtos ele fornece para tods os fornecedores que fornecem mais que um produto*/
+SELECT DTREQUEST, NMCUSTOMER, COUNT(DISTINCT PRODUCTREQUEST.CDPRODUCT) AS DISTPROD, (QTAMOUNT * VLUNITARY) AS VLTOTAL, AVG((VLUNITARY/QTAMOUNT )) AS VLMEDIA
+FROM PRODUCTREQUEST
+JOIN REQUEST ON REQUEST.CDREQUEST = PRODUCTREQUEST.CDREQUEST
+JOIN CUSTOMER ON CUSTOMER.CDCUSTOMER = REQUEST.CDCUSTOMER
+JOIN PRODUCT ON PRODUCT.CDPRODUCT = PRODUCTREQUEST.CDPRODUCT
+GROUP BY CUSTOMER.NMCUSTOMER, REQUEST.DTREQUEST, PRODUCTREQUEST.VLUNITARY,  PRODUCTREQUEST.QTAMOUNT
+ORDER BY COUNT(DISTINCT PRODUCT.NMPRODUCT)
+
+/*F) O nome do fornecedor e quantos produtos ele fornece para todos os fornecedores que fornecem mais que um produto*/
+SELECT SUPPLIER.NMSUPPLIER, COUNT(CDPRODUCT) AS QTSUPLYPROD
+FROM PRODUCT JOIN SUPPLIER ON SUPPLIER.CDSUPPLIER = PRODUCT.CDSUPPLIER
+GROUP BY SUPPLIER.NMSUPPLIER
+HAVING COUNT(CDPRODUCT) > 1
 
 /*G) O nome do produto, o numero de vezes qu ele foi pedido e a quantidade total pedida para produtos que foram pedidos menos que 2 vezes*/
+SELECT PRODUCT.NMPRODUCT, COUNT(PRODUCT.CDPRODUCT) AS QRREQT
+FROM PRODUCT 
+GROUP BY PRODUCT.NMPRODUCT
+HAVING COUNT(PRODUCT.CDPRODUCT) < 2
 
 /*H) O nome do cliente, o produto, o valor gasto com o produto, quantas vezes ele foi pedido pelo cliente e o nome do fornecedor. 
-Somente para produtos em que o cliente gastou mais de r$1000, ordenado por cliente e produto.*/
+Somente para produtos em que o cliente gastou mais de R$1000, ordenado por cliente e produto.*/
+SELECT CUSTOMER.NMCUSTOMER, PRODUCT.NMPRODUCT, SUPPLIER.NMSUPPLIER, (PRODUCTREQUEST.VLUNITARY * PRODUCTREQUEST.QTAMOUNT) AS VLSPEN, COUNT(REQUEST.CDCUSTOMER) AS QTCUSTQUEST
+FROM PRODUCTREQUEST
+JOIN REQUEST ON REQUEST.CDREQUEST = PRODUCTREQUEST.CDREQUEST
+JOIN CUSTOMER ON CUSTOMER.CDCUSTOMER = REQUEST.CDCUSTOMER
+JOIN PRODUCT ON PRODUCT.CDPRODUCT = PRODUCTREQUEST.CDPRODUCT
+JOIN SUPPLIER ON SUPPLIER.CDSUPPLIER = PRODUCT.CDSUPPLIER
+GROUP BY CUSTOMER.NMCUSTOMER, PRODUCT.NMPRODUCT, SUPPLIER.NMSUPPLIER, PRODUCTREQUEST.VLUNITARY, PRODUCTREQUEST.QTAMOUNT
+HAVING COUNT(PRODUCTREQUEST.VLUNITARY * PRODUCTREQUEST.QTAMOUNT) > 1000
+ORDER BY CUSTOMER.NMCUSTOMER,PRODUCT.NMPRODUCT
