@@ -1,17 +1,56 @@
 --LISTA 5 de Exercicios SQL
 USE treinamento
 
---Faça um comando para listar:
-/*A) O nome de todos os produtos e quantas vezes ele foi vendido, mesmo que não tenha sido vendido ainda*/
+--FaÃ§a um comando para listar:
+/*A) O nome de todos os produtos e quantas vezes ele foi vendido, mesmo que nÃ£o tenha sido vendido ainda*/
+SELECT NMPRODUCT, COUNT(PRODUCTREQUEST.CDPRODUCT) AS NUMVENDIDO
+FROM PRODUCTREQUEST
+JOIN PRODUCT ON PRODUCT.CDPRODUCT = PRODUCTREQUEST.CDPRODUCT
+GROUP BY NMPRODUCT
 
-/*B) O nome do fornecedor, e o numero de produtos que ele fornece , mesmo que não tenha fornecido produto algum */
 
-/*C) O nome do fornecedor o produto e qual o total de produtos dele já vendidos. Uma linha do total por fornecedor e uma linha com o total geral*/
+/*B) O nome do fornecedor, e o numero de produtos que ele fornece , mesmo que nÃ£o tenha fornecido produto algum */
+SELECT NMSUPPLIER, COUNT(PRODUCT.CDSUPPLIER) AS PRODSUPLY
+FROM PRODUCT
+JOIN SUPPLIER ON SUPPLIER.CDSUPPLIER = PRODUCT.CDSUPPLIER
+GROUP BY NMSUPPLIER
 
-/*D) O nome do cliente, o produto e o total que o cliente já gastou com esse produto. Uma linha com o total por cliente e uma linha com o total geral*/
+/*C) O nome do fornecedor o produto e qual o total de produtos dele jÃ¡ vendidos. Uma linha do total por fornecedor e uma linha com o total geral*/
+SELECT NMSUPPLIER, NMPRODUCT, SUM(PRODUCTREQUEST.CDPRODUCT) AS TOTALVEND
+FROM PRODUCTREQUEST 
+JOIN PRODUCT ON PRODUCT.CDPRODUCT = PRODUCTREQUEST.CDPRODUCT
+JOIN SUPPLIER ON SUPPLIER.CDSUPPLIER = PRODUCT.CDSUPPLIER
+GROUP BY ROLLUP (SUPPLIER.NMSUPPLIER, PRODUCT.NMPRODUCT)
 
-/*E) O nome e o telefone de todos os clientes que ainda não compraram produtos*/
+/*D) O nome do cliente, o produto e o total que o cliente jÃ¡ gastou com esse produto. Uma linha com o total por cliente e uma linha com o total geral*/
+
+SELECT PRODUCT.CDPRODUCT, NMCUSTOMER, NMPRODUCT, SUM(VLUNITARY) AS TOTALPROD
+FROM PRODUCTREQUEST	
+JOIN REQUEST ON REQUEST.CDREQUEST  = PRODUCTREQUEST.CDREQUEST
+JOIN CUSTOMER ON CUSTOMER.CDCUSTOMER = REQUEST.CDCUSTOMER
+JOIN PRODUCT ON PRODUCT.CDPRODUCT = PRODUCTREQUEST.CDPRODUCT
+GROUP BY ROLLUP(PRODUCT.CDPRODUCT,NMCUSTOMER, NMPRODUCT, VLUNITARY)
+
+/*E) O nome e o telefone de todos os clientes que ainda nÃ£o compraram produtos*/
+SELECT CUSTOMER.NMCUSTOMER, CUSTOMER.IDFONE
+FROM CUSTOMER
+LEFT JOIN REQUEST ON REQUEST.CDREQUEST = CUSTOMER.CDCUSTOMER
+LEFT JOIN PRODUCTREQUEST ON PRODUCTREQUEST.CDREQUEST = REQUEST.CDREQUEST
+GROUP BY CUSTOMER.NMCUSTOMER, CUSTOMER.IDFONE, PRODUCTREQUEST.QTAMOUNT
+HAVING PRODUCTREQUEST.QTAMOUNT IS NULL
 
 /*F) O nome e o telefone dos fornecedores que fornecem o produto 'leite em po' ou o produto 'agua mineral'*/
+SELECT NMSUPPLIER, IDFONE, NMPRODUCT
+FROM PRODUCT 
+JOIN SUPPLIER ON SUPPLIER.CDSUPPLIER = PRODUCT.CDSUPPLIER
+GROUP BY NMSUPPLIER, IDFONE, NMPRODUCT
+HAVING PRODUCT.NMPRODUCT LIKE '%leite em po%' OR PRODUCT.NMPRODUCT LIKE '%agua mineral%'
 
-/*G) O nome e o fornecedor do produto que já foi vendido mais que 3 vezes*/
+/*G) O nome e o fornecedor do produto que jÃ¡ foi vendido mais que 3 vezes*/
+SELECT PRODUCT.NMPRODUCT, SUPPLIER.NMSUPPLIER
+FROM PRODUCT
+JOIN SUPPLIER ON SUPPLIER.CDSUPPLIER = PRODUCT.CDSUPPLIER
+JOIN PRODUCTREQUEST ON PRODUCTREQUEST.CDPRODUCT = PRODUCT.CDPRODUCT
+GROUP BY PRODUCT.NMPRODUCT,
+SUPPLIER.NMSUPPLIER
+HAVING COUNT(PRODUCT.CDPRODUCT) > 3
