@@ -1,28 +1,72 @@
---LISTA 6 de Exercicios SQL
+--Lista 6 de SQL
+--1) Faça um script
 USE treinamento
 
---1) Fa�a um script
-/*A) Excluindo todos os clientes que n�o compraram nada ainda*/
+-- A) Excluindo todos os clientes que não compraram nada ainda
+DELETE FROM CUSTOMER
+WHERE CDCUSTOMER NOT IN (SELECT DISTINCT CDCUSTOMER FROM REQUEST)
 
-/*B) Excluindo todos os fornecedores que n�o forneceram nenhum produtos*/
+-- B) Excluindo todos os fornecedores que não forneceram nenhum produto
+DELETE FROM Supplier
+WHERE CDSUPPLIER NOT IN (SELECT DISTINCT CDSUPPLIER FROM PRODUCT)
 
-/*C) Atualizando o valor de venda pelo preco original do produto*/
+-- C) Atualizando o valor de venda pelo preço original do produto
+UPDATE PRODUCTREQUEST
+SET VLUNITARY = (SELECT VLPRICE FROM PRODUCT WHERE CDPRODUCT = PRODUCTREQUEST.CDPRODUCT)
 
-/*D) Acrescentando a tabela do fornecedor o campo dsstatus(10)*/
+-- D) Acrescentando a tabela do fornecedor o campo dsstatus(10)
+ALTER TABLE SUPPLIER
+ADD DSSTATUS VARCHAR(10)
 
-/*E) Atualizando o status do fornecedor para 'INATIVO' nos fornecedores que n�o forneceram nenhum produto*/
+-- E) Atualizando o status do fornecedor para 'INATIVO' nos fornecedores que não forneceram nenhum produto
+UPDATE SUPPLIER
+SET DSSTATUS = 'INATIVO'
+FROM SUPPLIER JOIN PRODUCT ON SUPPLIER.CDSUPPLIER = PRODUCT.CDSUPPLIER
+WHERE SUPPLIER.CDSUPPLIER NOT LIKE PRODUCT.CDSUPPLIER
 
-/*F) Fa�a o script que atualize o campo endere�o do cliente para 'DESCONHECIDO' onde o endere�o for 'NULO'*/
+-- F) Faça o script que atualize o campo endereço do cliente para 'DESCONHECIDO' onde o endereço for 'NULO'
+UPDATE CUSTOMER
+SET NMADRESS = 'DESCONHECIDO'
+WHERE NMADRESS IS NULL
 
-/*G) Fa�a o script que insira todos os produtos em todos os pedidos. Quantidade 10 e pre�o original do produto*/
+-- G) Faça o script que insira todos os produtos em todos os pedidos. Quantidade 10 e preço original do produto
+INSERT INTO PRODUCTREQUEST (CDREQUEST, CDPRODUCT, QTAMOUNT, VLUNITARY)
+SELECT PRODUCTREQUEST.CDREQUEST, PRODUCT.CDPRODUCT, 10, PRODUCT.VLPRICE
+FROM PRODUCTREQUEST 
+JOIN PRODUCT ON PRODUCT.CDPRODUCT = PRODUCTREQUEST.CDPRODUCT
+JOIN REQUEST ON PRODUCTREQUEST.CDREQUEST = REQUEST.CDREQUEST
 
+--2) Faça as seguintes consultas
 
---2) Fa�a as seguintes consultas 
-/*A) Todos os produtos comprados por clientes (nome), como o numero de vezes que foi comprado, 
-a quantidade total comprada e o valor total j� pago por aquele produto */
+-- A) Todos os produtos comprados por clientes (nome), como o número de vezes que foi comprado,
+-- a quantidade total comprada e o valor total já pago por aquele produto
+SELECT CUSTOMER.NMCUSTOMER, PRODUCT.NMPRODUCT, COUNT(PRODUCT.CDPRODUCT) AS NUMCOMPRAS,
+       SUM(PRODUCTREQUEST.QTAMOUNT) AS QuantidadeTotal,
+       SUM(PRODUCTREQUEST.QTAMOUNT * PRODUCTREQUEST.VLUNITARY) AS ValorTotalPago
+FROM Customer
+INNER JOIN Request ON CUSTOMER.CDCUSTOMER = REQUEST.CDCUSTOMER
+INNER JOIN ProductRequest ON REQUEST.CDREQUEST = PRODUCTREQUEST.CDREQUEST
+INNER JOIN Product ON PRODUCTREQUEST.CDPRODUCT = PRODUCT.CDPRODUCT
+GROUP BY CUSTOMER.NMCUSTOMER, PRODUCT.NMPRODUCT
 
-/*B) O numero de pedidos e o total comprado por clientes (nome) no ano de 2003*/
+-- B) O número de pedidos e o total comprado por clientes (nome) no ano de 2003
+SELECT CUSTOMER.NMCUSTOMER, COUNT(REQUEST.CDREQUEST) AS NumPedidos, REQUEST.DTREQUEST,
+       SUM(PRODUCTREQUEST.QTAMOUNT * PRODUCTREQUEST.VLUNITARY) AS TotalComprado
+FROM Customer
+LEFT JOIN Request ON CUSTOMER.CDCUSTOMER = REQUEST.CDCUSTOMER AND YEAR(REQUEST.DTREQUEST) = 2003
+LEFT JOIN ProductRequest ON REQUEST.CDREQUEST = PRODUCTREQUEST.CDREQUEST
+GROUP BY CUSTOMER.NMCUSTOMER,REQUEST.DTREQUEST
 
-/*C) O nome do fornecedor, seu telefone, o nome do produto, seu preco e a quantidade me estoque, o fornecedor deve aparecer mesmo que n�o tenha nenhum produto*/
+-- C) O nome do fornecedor, seu telefone, o nome do produto, seu preço e a quantidade em estoque,
+-- o fornecedor deve aparecer mesmo que não tenha nenhum produto
+SELECT SUPPLIER.NMSUPPLIER, SUPPLIER.IDFONE, PRODUCT.NMPRODUCT, PRODUCT.VLPRICE, PRODUCT.QTSTOCK
+FROM Supplier
+LEFT JOIN Product ON SUPPLIER.CDSUPPLIER = PRODUCT.CDSUPPLIER
 
-/*D) O nome do cliente, a data do pedido e o valor total, o cliente deve aparecer mesmo que n�o tenha nenhum pedido*/
+-- D) O nome do cliente, a data do pedido e o valor total, o cliente deve aparecer mesmo que não tenha nenhum pedido
+SELECT CUSTOMER.NMCUSTOMER, REQUEST.DTREQUEST, SUM(PRODUCTREQUEST.QTAMOUNT * PRODUCTREQUEST.VLUNITARY) AS ValorTotal
+FROM Customer 
+LEFT JOIN Request  ON CUSTOMER.CDCUSTOMER = REQUEST.CDCUSTOMER
+LEFT JOIN ProductRequest ON REQUEST.CDREQUEST = PRODUCTREQUEST.CDREQUEST
+GROUP BY CUSTOMER.NMCUSTOMER, REQUEST.DTREQUEST
+
